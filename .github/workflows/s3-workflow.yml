@@ -1,0 +1,64 @@
+name: s3-workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      s3bucketName:
+          description: 'Buckect Name'
+          required: true
+      awsRegion:
+          description: 'AWS Region for the bucket'
+          required: true
+      action:
+          description: 'Action to perform (apply/destroy)'
+          required: true
+
+jobs: 
+  terraform_apply:
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    if: ${{ github.event.inputs.action == 'apply' }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+    - name: Terraform Init
+      run: terraform init
+      working-directory: Terraform
+    - name: Terraform Format
+      run: terraform fmt
+      working-directory: Terraform
+    - name: Terraform Validate
+      run: terraform validate
+      working-directory: Terraform
+    - name: Terraform Apply
+      run: terraform apply -var s3bucketName=${{ github.event.inputs.s3bucketName }} -var awsRegion=${{ github.event.inputs.awsRegion }} -auto-approve
+      working-directory: Terraform
+
+  terraform_destroy:
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    if: ${{ github.event.inputs.action == 'destroy' }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+    - name: Terraform Init
+      run: terraform init
+      working-directory: Terraform
+    - name: Terraform Format
+      run: terraform fmt
+      working-directory: Terraform
+    - name: Terraform Validate
+      run: terraform validate
+      working-directory: Terraform
+    - name: Terraform Destroy
+      run: terraform destroy -var s3bucketName=${{ github.event.inputs.s3bucketName }} -var awsRegion=${{ github.event.inputs.awsRegion }} -auto-approve
+      working-directory: Terraform
+          

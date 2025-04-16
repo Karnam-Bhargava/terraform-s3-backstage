@@ -10,7 +10,7 @@ on:
           description: 'AWS Region for the bucket'
           required: true
       action:
-          description: 'Action to perform (apply/destroy)'
+          description: 'Action to perform (create/delete)'
           required: true
 permissions:
   id-token: write
@@ -20,7 +20,7 @@ jobs:
   terraform_apply:
     runs-on: ubuntu-latest
 
-    if: ${{ github.event.inputs.action == 'apply' }}
+    if: ${{ github.event.inputs.action == 'create' }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -50,7 +50,7 @@ jobs:
   terraform_destroy:
     runs-on: ubuntu-latest
 
-    if: ${{ github.event.inputs.action == 'destroy' }}
+    if: ${{ github.event.inputs.action == 'delete' }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v2

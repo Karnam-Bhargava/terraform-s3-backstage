@@ -27,16 +27,16 @@ jobs:
       uses: hashicorp/setup-terraform@v1
     - name: Terraform Init
       run: terraform init
-      working-directory: Terraform
+      
     - name: Terraform Format
       run: terraform fmt
-      working-directory: Terraform
+      
     - name: Terraform Validate
       run: terraform validate
-      working-directory: Terraform
+     
     - name: Terraform Apply
       run: terraform apply -var s3bucketName=${{ github.event.inputs.s3bucketName }} -var awsRegion=${{ github.event.inputs.awsRegion }} -auto-approve
-      working-directory: Terraform
+     
 
   terraform_destroy:
     runs-on: ubuntu-latest
@@ -51,14 +51,14 @@ jobs:
       uses: hashicorp/setup-terraform@v1
     - name: Terraform Init
       run: terraform init
-      working-directory: Terraform
+      
     - name: Terraform Format
       run: terraform fmt
-      working-directory: Terraform
+      
     - name: Terraform Validate
       run: terraform validate
-      working-directory: Terraform
+      
     - name: Terraform Destroy
       run: terraform destroy -var s3bucketName=${{ github.event.inputs.s3bucketName }} -var awsRegion=${{ github.event.inputs.awsRegion }} -auto-approve
-      working-directory: Terraform
+      
           

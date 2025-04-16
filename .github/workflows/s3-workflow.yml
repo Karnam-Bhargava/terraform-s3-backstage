@@ -21,6 +21,14 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+    
+    - name: Assume AWS Role using OIDC
+      uses: aws-actions/configure-aws-credentials@v1.7.0
+      with:
+        role-to-assume: arn:aws:iam::746669229710:role/GitHubAction-AssumeRoleWithAction
+        role-session-name: GitHub_to_AWS_via_FederatedOIDC
+        aws-region: ${{ github.event.inputs.region }}
+        
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
     - name: Terraform Init
@@ -31,13 +39,6 @@ jobs:
       
     - name: Terraform Validate
       run: terraform validate
-    
-    - name: Assume AWS Role using OIDC
-      uses: aws-actions/configure-aws-credentials@v1.7.0
-      with:
-        role-to-assume: arn:aws:iam::746669229710:role/GitHubAction-AssumeRoleWithAction
-        role-session-name: GitHub_to_AWS_via_FederatedOIDC
-        aws-region: ${{ github.event.inputs.region }}
      
     - name: Terraform Apply
       run: terraform apply -var bucket_name=${{ github.event.inputs.bucket_name }} -var region=${{ github.event.inputs.region }} -auto-approve
@@ -50,6 +51,14 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+      
+    - name: Assume AWS Role using OIDC
+      uses: aws-actions/configure-aws-credentials@v1.7.0
+      with:
+        role-to-assume: arn:aws:iam::746669229710:role/GitHubAction-AssumeRoleWithAction
+        role-session-name: GitHub_to_AWS_via_FederatedOIDC
+        aws-region: ${{ github.event.inputs.region }}
+    
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
     - name: Terraform Init
@@ -60,13 +69,6 @@ jobs:
       
     - name: Terraform Validate
       run: terraform validate
-
-    - name: Assume AWS Role using OIDC
-      uses: aws-actions/configure-aws-credentials@v1.7.0
-      with:
-        role-to-assume: arn:aws:iam::746669229710:role/GitHubAction-AssumeRoleWithAction
-        role-session-name: GitHub_to_AWS_via_FederatedOIDC
-        aws-region: ${{ github.event.inputs.region }}
       
     - name: Terraform Destroy
       run: terraform destroy -var bucket_name=${{ github.event.inputs.bucket_name }} -var region=${{ github.event.inputs.region }} -auto-approve

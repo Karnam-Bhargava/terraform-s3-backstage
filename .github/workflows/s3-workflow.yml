@@ -3,10 +3,10 @@ name: s3-workflow
 on:
   workflow_dispatch:
     inputs:
-      s3bucketName:
+      bucket_name:
           description: 'Buckect Name'
           required: true
-      awsRegion:
+      region:
           description: 'AWS Region for the bucket'
           required: true
       action:
@@ -35,7 +35,7 @@ jobs:
       run: terraform validate
      
     - name: Terraform Apply
-      run: terraform apply -var s3bucketName=${{ github.event.inputs.s3bucketName }} -var awsRegion=${{ github.event.inputs.awsRegion }} -auto-approve
+      run: terraform apply -var bucket_name=${{ github.event.inputs.bucket_name }} -var region=${{ github.event.inputs.region }} -auto-approve
      
 
   terraform_destroy:
@@ -59,6 +59,4 @@ jobs:
       run: terraform validate
       
     - name: Terraform Destroy
-      run: terraform destroy -var s3bucketName=${{ github.event.inputs.s3bucketName }} -var awsRegion=${{ github.event.inputs.awsRegion }} -auto-approve
-      
-          
+      run: terraform destroy -var bucket_name=${{ github.event.inputs.s3bucketName }} -var region=${{ github.event.inputs.awsRegion }} -auto-approve
